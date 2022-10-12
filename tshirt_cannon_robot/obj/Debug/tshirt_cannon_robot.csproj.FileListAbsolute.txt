@@ -1,0 +1,15 @@
+C:\Users\Cody Wellman\Documents\GitHub\tshirt-cannon-robot\tshirt_cannon_robot\bin\Debug\le\tshirt_cannon_robot.exe
+C:\Users\Cody Wellman\Documents\GitHub\tshirt-cannon-robot\tshirt_cannon_robot\bin\Debug\be\tshirt_cannon_robot.exe
+C:\Users\Cody Wellman\Documents\GitHub\tshirt-cannon-robot\tshirt_cannon_robot\bin\Debug\le\tshirt_cannon_robot.pdb
+C:\Users\Cody Wellman\Documents\GitHub\tshirt-cannon-robot\tshirt_cannon_robot\bin\Debug\be\tshirt_cannon_robot.pdb
+C:\Users\Cody Wellman\Documents\GitHub\tshirt-cannon-robot\tshirt_cannon_robot\bin\Debug\tshirt_cannon_robot.exe
+C:\Users\Cody Wellman\Documents\GitHub\tshirt-cannon-robot\tshirt_cannon_robot\bin\Debug\tshirt_cannon_robot.pdb
+C:\Users\Cody Wellman\Documents\GitHub\tshirt-cannon-robot\tshirt_cannon_robot\bin\Debug\le\tshirt_cannon_robot.pe
+C:\Users\Cody Wellman\Documents\GitHub\tshirt-cannon-robot\tshirt_cannon_robot\bin\Debug\le\tshirt_cannon_robot.pdbx
+C:\Users\Cody Wellman\Documents\GitHub\tshirt-cannon-robot\tshirt_cannon_robot\bin\Debug\be\tshirt_cannon_robot.pe
+C:\Users\Cody Wellman\Documents\GitHub\tshirt-cannon-robot\tshirt_cannon_robot\bin\Debug\be\tshirt_cannon_robot.pdbx
+C:\Users\Cody Wellman\Documents\GitHub\tshirt-cannon-robot\tshirt_cannon_robot\obj\Debug\tshirt_cannon_robot.csproj.AssemblyReference.cache
+C:\Users\Cody Wellman\Documents\GitHub\tshirt-cannon-robot\tshirt_cannon_robot\obj\Debug\TinyCLR_DebugReferences.cache
+C:\Users\Cody Wellman\Documents\GitHub\tshirt-cannon-robot\tshirt_cannon_robot\obj\Debug\tshirt_cannon_robot.csproj.CoreCompileInputs.cache
+C:\Users\Cody Wellman\Documents\GitHub\tshirt-cannon-robot\tshirt_cannon_robot\obj\Debug\tshirt_cannon_robot.exe
+C:\Users\Cody Wellman\Documents\GitHub\tshirt-cannon-robot\tshirt_cannon_robot\obj\Debug\tshirt_cannon_robot.pdb
