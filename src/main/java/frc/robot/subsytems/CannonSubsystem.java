@@ -1,6 +1,8 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+/*
+ * Copyright (C) 2023 Team 3602 All rights reserved. This work is
+ * licensed under the terms of the MIT license which can be found
+ * in the root directory of this project.
+ */
 
 package frc.robot.subsytems;
 
@@ -24,18 +26,18 @@ public class CannonSubsystem extends SubsystemBase {
   private final AnalogInput firePressSense = new AnalogInput(CannonConstants.firePressSenseChan);
   private final Solenoid firesSolenoid = new Solenoid(PneumaticsModuleType.REVPH, CannonConstants.firesSolenoidChan);
   private final Solenoid chargeSolenoid = new Solenoid(PneumaticsModuleType.REVPH, CannonConstants.chargeSolenoidChan);
-  private final Solenoid loadActuatorSolenoid = new Solenoid(PneumaticsModuleType.REVPH, CannonConstants.loadActuatorInsertSolenoidChan);
-  private final Solenoid retSolenoid = new Solenoid(PneumaticsModuleType.REVPH, CannonConstants.loadActuatorRetSolenoidChan);
-  
+  private final Solenoid loadActuatorSolenoid = new Solenoid(PneumaticsModuleType.REVPH,
+      CannonConstants.loadActuatorInsertSolenoidChan);
+  private final Solenoid retSolenoid = new Solenoid(PneumaticsModuleType.REVPH,
+      CannonConstants.loadActuatorRetSolenoidChan);
 
   private final DigitalInput loadActuatorRet = new DigitalInput(CannonConstants.loadActuatorRetDIOChan);
   private final DigitalInput loadActuatorInsert = new DigitalInput(CannonConstants.loadActuatorInsertDIOChan);
-  private final SparkMaxLimitSwitch rotatePresetLimit = rotateMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-  private final SparkMaxLimitSwitch elevatePresetLimit = elevateMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-  
+  private final SparkMaxLimitSwitch rotatePresetLimit = rotateMotor
+      .getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+  private final SparkMaxLimitSwitch elevatePresetLimit = elevateMotor
+      .getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
 
-  
-  /** Creates a new DriveSubsytem. */
   public CannonSubsystem() {
     configCannonSubsys();
   }
@@ -48,5 +50,4 @@ public class CannonSubsystem extends SubsystemBase {
   private void configCannonSubsys() {
 
   }
-   
 }
