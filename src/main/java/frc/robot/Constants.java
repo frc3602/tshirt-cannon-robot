@@ -23,6 +23,8 @@ public final class Constants {
         public static final int pneumaticHubCANID = 7;
         public static final int firePressSenseChan = 0;
         public static final int firesSolenoidChan = 0;
+        public static final int fillSolenoidChan = 4;
+
         public static final int chargeSolenoidChan = 1;
 
         public static final int loadActuatorRetDIOChan = 0;
