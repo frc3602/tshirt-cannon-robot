@@ -9,6 +9,7 @@ package frc.robot.subsytems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import static frc.robot.Constants.*;
 
@@ -31,19 +32,13 @@ public class CannonSubsystem extends SubsystemBase {
   private final CANSparkMax rotateMotor = new CANSparkMax(CannonConstants.rotateMotorCANID, MotorType.kBrushless);
   private final CANSparkMax elevateMotor = new CANSparkMax(CannonConstants.rotateMotorCANID, MotorType.kBrushless);
 
+  // PID controllers
+  private final SparkMaxPIDController rotateMotorPIDController = rotateMotor.getPIDController();
+  private final SparkMaxPIDController elevateMotorPIDController = elevateMotor.getPIDController();
+
   // Motor encoders
   private final RelativeEncoder rotateMotorEncoder = rotateMotor.getEncoder();
   private final RelativeEncoder elevateMotorEncoder = elevateMotor.getEncoder();
-
-  // Control system contollers
-  private final PIDController rotatePIDController = new PIDController(CannonConstants.rotateKP,
-      CannonConstants.rotateKI, CannonConstants.rotateKD);
-  private final SimpleMotorFeedforward rotateFeedfwd = new SimpleMotorFeedforward(CannonConstants.rotateKS,
-      CannonConstants.rotateKV, CannonConstants.rotateKA);
-  private final PIDController elevatePIDController = new PIDController(CannonConstants.elevateKP,
-      CannonConstants.elevateKI, CannonConstants.elevateKD);
-  private final SimpleMotorFeedforward elevateFeedfwd = new SimpleMotorFeedforward(CannonConstants.elevateKS,
-      CannonConstants.elevateKV, CannonConstants.elevateKA);
 
   // Pneumatics
   private final PneumaticHub pneumaticHub = new PneumaticHub(CannonConstants.pneumaticHubCANID);
