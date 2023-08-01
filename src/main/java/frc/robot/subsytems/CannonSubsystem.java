@@ -7,6 +7,7 @@
 package frc.robot.subsytems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.SparkMaxPIDController;
@@ -24,21 +25,25 @@ import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class CannonSubsystem extends SubsystemBase {
   // Motor controllers
-  private final CANSparkMax rotateMotor = new CANSparkMax(CannonConstants.rotateMotorCANID, MotorType.kBrushless);
-  private final CANSparkMax elevateMotor = new CANSparkMax(CannonConstants.rotateMotorCANID, MotorType.kBrushless);
+  public final CANSparkMax rotateMotor = new CANSparkMax(CannonConstants.rotateMotorCANID, MotorType.kBrushless); // This should be private but is public for testing.
+  // private final CANSparkMax elevateMotor = new
+  // CANSparkMax(CannonConstants.rotateMotorCANID, MotorType.kBrushless);
 
   // PID controllers
   private final SparkMaxPIDController rotateMotorPIDController = rotateMotor.getPIDController();
-  private final SparkMaxPIDController elevateMotorPIDController = elevateMotor.getPIDController();
+  // private final SparkMaxPIDController elevateMotorPIDController =
+  // elevateMotor.getPIDController();
 
   // Motor encoders
   private final RelativeEncoder rotateMotorEncoder = rotateMotor.getEncoder();
-  private final RelativeEncoder elevateMotorEncoder = elevateMotor.getEncoder();
+  // private final RelativeEncoder elevateMotorEncoder =
+  // elevateMotor.getEncoder();
 
   // Pneumatics
   private final PneumaticHub pneumaticHub = new PneumaticHub(CannonConstants.pneumaticHubCANID);
@@ -58,37 +63,67 @@ public class CannonSubsystem extends SubsystemBase {
   private final DigitalInput loadActuatorInsert = new DigitalInput(CannonConstants.loadActuatorInsertDIOChan);
   private final SparkMaxLimitSwitch rotatePresetLimit = rotateMotor
       .getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-  private final SparkMaxLimitSwitch elevatePresetLimit = elevateMotor
-      .getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+  // private final SparkMaxLimitSwitch elevatePresetLimit = elevateMotor
+  // .getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+
+  public double rotationAngleDegrees;
+  // public double elevationAngleDegrees;
 
   public CannonSubsystem() {
     configCannonSubsys();
+
+    initRotateMotor();
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putBoolean("Foreward Limit Enabled", rotatePresetLimit.isPressed());
+    SmartDashboard.putNumber("Rotation Angle in Degrees", getRotateMotorEncoder());
+  }
+
+  private void initRotateMotor() {
+    rotateMotor.set(0.1);
+    while(!rotatePresetLimit.isPressed());
+    rotateMotor.stopMotor();
+    resetRotateMotorEncoder();
   }
 
   public double getRotateMotorEncoder() {
     return rotateMotorEncoder.getPosition();
   }
 
-  public double getElevateMotorEncoder() {
-    return elevateMotorEncoder.getPosition();
+  /*
+   * public double getElevateMotorEncoder() {
+   * return elevateMotorEncoder.getPosition();
+   * }
+   */
+
+  public void resetRotateMotorEncoder() {
+    rotateMotorEncoder.setPosition(0.0);
   }
 
-  public Command rotateMotor(DoubleSupplier angleSup) {
-    return run(() -> {
-      rotateMotor.setVoltage(rotatePIDController.calculate(getRotateMotorEncoder(), angleSup.getAsDouble())
-          + rotateFeedfwd.calculate(Math.toRadians(angleSup.getAsDouble()), 0.0));
-    });
+  /*
+   * public void resetElevateMotorEncoder() {
+   * elevateMotorEncoder.setPosition(0.0);
+   * }
+   */
+
+  public void setRotationAngle(double angleDegrees) {
+    rotationAngleDegrees = angleDegrees;
   }
 
-  public Command elevateMotor(DoubleSupplier angleSup) {
+  /*
+   * public void setElevationAngle(double angleDegrees) {
+   * elevationAngleDegrees = angleDegrees;
+   * }
+   */
+
+  public Command holdAngles() {
     return run(() -> {
-      elevateMotor.setVoltage(elevatePIDController.calculate(getElevateMotorEncoder(), angleSup.getAsDouble())
-          + elevateFeedfwd.calculate(Math.toRadians(angleSup.getAsDouble()), 0.0));
+      rotateMotorPIDController.setReference(rotationAngleDegrees, CANSparkMax.ControlType.kPosition);
+      // elevateMotorPIDController.setReference(elevationAngleDegrees,
+      // CANSparkMax.ControlType.kPosition);
     });
   }
 
@@ -103,7 +138,21 @@ public class CannonSubsystem extends SubsystemBase {
   }
 
   private void configCannonSubsys() {
+    // PID for rotation
+    rotateMotorPIDController.setP(CannonConstants.rotateKP);
+    rotateMotorPIDController.setI(CannonConstants.rotateKI);
+    rotateMotorPIDController.setD(CannonConstants.rotateKD);
+
+    /*
+     * // PID for elevation
+     * elevateMotorPIDController.setP(CannonConstants.elevateKP);
+     * elevateMotorPIDController.setI(CannonConstants.elevateKI);
+     * elevateMotorPIDController.setD(CannonConstants.elevateKD);
+     */
+
+    // Conversion factors
     rotateMotorEncoder.setPositionConversionFactor(360 / CannonConstants.rotateMotorGearRatio);
-    elevateMotorEncoder.setPositionConversionFactor(360 / CannonConstants.elevateMotorGearRatio);
+    // elevateMotorEncoder.setPositionConversionFactor(360 /
+    // CannonConstants.elevateMotorGearRatio);
   }
 }

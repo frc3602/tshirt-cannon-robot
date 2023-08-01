@@ -19,12 +19,12 @@ public final class Constants {
 
   public static final class CannonConstants {
     // CAN Ids
-    public static final int rotateMotorCANID = 5;
-    public static final int elevateMotorCANID = 6;
+    public static final int rotateMotorCANID = 6; // Actually 5 lol
+    // public static final int elevateMotorCANID = 6;
 
     // Gear ratios
     public static final double rotateMotorGearRatio = 0.0;
-    public static final double elevateMotorGearRatio = 0.0;
+    // public static final double elevateMotorGearRatio = 0.0;
 
     // Rotate PID gains
     public static final double rotateKP = 0.0;
@@ -36,15 +36,17 @@ public final class Constants {
     public static final double rotateKV = 0.0;
     public static final double rotateKA = 0.0;
 
-    // Elevate PID gains
-    public static final double elevateKP = 0.0;
-    public static final double elevateKI = 0.0;
-    public static final double elevateKD = 0.0;
-
-    // Elevate feedforeward gains
-    public static final double elevateKS = 0.0;
-    public static final double elevateKV = 0.0;
-    public static final double elevateKA = 0.0;
+    /*
+     * // Elevate PID gains
+     * public static final double elevateKP = 0.0;
+     * public static final double elevateKI = 0.0;
+     * public static final double elevateKD = 0.0;
+     * 
+     * // Elevate feedforeward gains
+     * public static final double elevateKS = 0.0;
+     * public static final double elevateKV = 0.0;
+     * public static final double elevateKA = 0.0;
+     */
 
     // Pmeumatic Ids
     public static final int pneumaticHubCANID = 7;
