@@ -31,7 +31,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class CannonSubsystem extends SubsystemBase {
   // Motor controllers
-  public final CANSparkMax rotateMotor = new CANSparkMax(CannonConstants.rotateMotorCANID, MotorType.kBrushless); // This should be private but is public for testing.
+  public final CANSparkMax rotateMotor = new CANSparkMax(CannonConstants.rotateMotorCANID, MotorType.kBrushless); // This
+                                                                                                                  // should
+                                                                                                                  // be
+                                                                                                                  // private
+                                                                                                                  // but
+                                                                                                                  // is
+                                                                                                                  // public
+                                                                                                                  // for
+                                                                                                                  // testing.
   // private final CANSparkMax elevateMotor = new
   // CANSparkMax(CannonConstants.rotateMotorCANID, MotorType.kBrushless);
 
@@ -53,14 +61,12 @@ public class CannonSubsystem extends SubsystemBase {
 
   private final DoubleSolenoid chargeSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH,
       CannonConstants.chargeSolenoidFwdChan, CannonConstants.chargeSolenoidRevChan);
-  private final DoubleSolenoid loadActuatorSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH,
-      CannonConstants.loadActuatorInsertSolenoidFwdChan, CannonConstants.loadActuatorInsertSolenoidRevChan);
-  private final DoubleSolenoid retSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH,
-      CannonConstants.loadActuatorRetSolenoidFwdChan, CannonConstants.loadActuatorRetSolenoidRevChan);
+  public final DoubleSolenoid loadActuatorSolenoid = new DoubleSolenoid(CannonConstants.pneumaticHubCANID,
+      PneumaticsModuleType.REVPH, CannonConstants.loadActuatorSolenoidFwdChan,
+      CannonConstants.loadActuatorSolenoidRevChan);
 
   // DIO
-  private final DigitalInput loadActuatorRet = new DigitalInput(CannonConstants.loadActuatorRetDIOChan);
-  private final DigitalInput loadActuatorInsert = new DigitalInput(CannonConstants.loadActuatorInsertDIOChan);
+  private final DigitalInput loadActuatorSwitch = new DigitalInput(CannonConstants.loadActuatorSwitchDIOChan);
   private final SparkMaxLimitSwitch rotatePresetLimit = rotateMotor
       .getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
   // private final SparkMaxLimitSwitch elevatePresetLimit = elevateMotor
@@ -69,10 +75,11 @@ public class CannonSubsystem extends SubsystemBase {
   public double rotationAngleDegrees;
   // public double elevationAngleDegrees;
 
+  public boolean isRotateMotorInitialized = false;
+
   public CannonSubsystem() {
     configCannonSubsys();
 
-    initRotateMotor();
   }
 
   @Override
@@ -80,13 +87,23 @@ public class CannonSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putBoolean("Foreward Limit Enabled", rotatePresetLimit.isPressed());
     SmartDashboard.putNumber("Rotation Angle in Degrees", getRotateMotorEncoder());
+    SmartDashboard.putBoolean("Is rotation initialized", isRotateMotorInitialized);
+    SmartDashboard.putBoolean("Arm Retract Number", loadActuatorSwitch.get());
+    if (!isRotateMotorInitialized) initRotateMotor();
   }
 
   private void initRotateMotor() {
+    loadActuatorSolenoid.set(Value.kReverse);
+    while (loadActuatorSwitch.get())
+      ;
+    loadActuatorSolenoid.set(Value.kOff);
     rotateMotor.set(0.1);
-    while(!rotatePresetLimit.isPressed());
-    rotateMotor.stopMotor();
+    while (!rotatePresetLimit.isPressed())
+      ;
+    rotateMotor.set(0.0);
+    Timer.delay(1.0);
     resetRotateMotorEncoder();
+    isRotateMotorInitialized = true;
   }
 
   public double getRotateMotorEncoder() {
@@ -134,6 +151,13 @@ public class CannonSubsystem extends SubsystemBase {
       firesSolenoid.set(Value.kReverse);
       Timer.delay(2.0);
       firesSolenoid.set(Value.kOff);
+    });
+  }
+
+  public Command retractLoadArm() {
+    return runOnce(() -> {
+      loadActuatorSolenoid.set(Value.kReverse);
+
     });
   }
 

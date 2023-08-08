@@ -57,13 +57,11 @@ public final class Constants {
     public static final int chargeSolenoidFwdChan = 1;
     public static final int chargeSolenoidRevChan = 5;
 
-    public static final int loadActuatorRetSolenoidFwdChan = 2;
-    public static final int loadActuatorRetSolenoidRevChan = 6;
-    public static final int loadActuatorInsertSolenoidFwdChan = 3;
-    public static final int loadActuatorInsertSolenoidRevChan = 7;
+    public static final int loadActuatorSolenoidFwdChan = 2;
+    public static final int loadActuatorSolenoidRevChan = 3;
 
     // Limit switch channels
-    public static final int loadActuatorRetDIOChan = 0;
-    public static final int loadActuatorInsertDIOChan = 1;
+    public static final int loadActuatorSwitchDIOChan = 0;
+
   }
 }

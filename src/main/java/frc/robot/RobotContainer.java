@@ -6,6 +6,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -15,7 +16,7 @@ import static frc.robot.Constants.*;
 
 public class RobotContainer {
   private final DriveSubsystem driveSubsys = new DriveSubsystem();
-  private final CannonSubsystem cannonSubsys = new CannonSubsystem();
+  public final CannonSubsystem cannonSubsys = new CannonSubsystem();
 
   private final CommandXboxController xboxController = new CommandXboxController(DriveConstants.xboxControllerPort);
 
