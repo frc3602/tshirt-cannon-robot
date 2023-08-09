@@ -17,8 +17,7 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer = new RobotContainer();
 
   @Override
-  public void robotInit() {
-  }
+  public void robotInit() {}
 
   @Override
   public void robotPeriodic() {
@@ -28,6 +27,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     m_robotContainer.cannonSubsys.isRotateMotorInitialized = false;
+    m_robotContainer.cannonSubsys.numberOfShotsRemaining = 8;
   }
 
   @Override

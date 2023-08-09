@@ -50,12 +50,11 @@ public final class Constants {
 
     // Pmeumatic Ids
     public static final int pneumaticHubCANID = 7;
-    public static final int firePressSenseChan = 0;
+    // public static final int firePressSenseChan = 0;
     public static final int firesSolenoidChan = 0;
     public static final int fillSolenoidChan = 4;
 
-    public static final int chargeSolenoidFwdChan = 1;
-    public static final int chargeSolenoidRevChan = 5;
+    public static final int chargeSolenoidChan = 1;
 
     public static final int loadActuatorSolenoidFwdChan = 2;
     public static final int loadActuatorSolenoidRevChan = 3;

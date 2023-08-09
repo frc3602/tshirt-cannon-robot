@@ -6,6 +6,7 @@
 
 package frc.robot.subsytems;
 
+import com.fasterxml.jackson.databind.deser.SettableAnyProperty;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.RelativeEncoder;
@@ -23,23 +24,21 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class CannonSubsystem extends SubsystemBase {
+  private CommandXboxController xBoxController;
+
   // Motor controllers
-  public final CANSparkMax rotateMotor = new CANSparkMax(CannonConstants.rotateMotorCANID, MotorType.kBrushless); // This
-                                                                                                                  // should
-                                                                                                                  // be
-                                                                                                                  // private
-                                                                                                                  // but
-                                                                                                                  // is
-                                                                                                                  // public
-                                                                                                                  // for
-                                                                                                                  // testing.
+  private final CANSparkMax rotateMotor = new CANSparkMax(CannonConstants.rotateMotorCANID, MotorType.kBrushless);
   // private final CANSparkMax elevateMotor = new
   // CANSparkMax(CannonConstants.rotateMotorCANID, MotorType.kBrushless);
 
@@ -55,12 +54,12 @@ public class CannonSubsystem extends SubsystemBase {
 
   // Pneumatics
   private final PneumaticHub pneumaticHub = new PneumaticHub(CannonConstants.pneumaticHubCANID);
-  private final AnalogInput firePressSense = new AnalogInput(CannonConstants.firePressSenseChan);
+  // private final AnalogInput firePressSense = new
+  // AnalogInput(CannonConstants.firePressSenseChan);
   private final DoubleSolenoid firesSolenoid = new DoubleSolenoid(CannonConstants.pneumaticHubCANID,
       PneumaticsModuleType.REVPH, CannonConstants.fillSolenoidChan, CannonConstants.firesSolenoidChan);
 
-  private final DoubleSolenoid chargeSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH,
-      CannonConstants.chargeSolenoidFwdChan, CannonConstants.chargeSolenoidRevChan);
+  private final Solenoid chargeSolenoid = new Solenoid(PneumaticsModuleType.REVPH, CannonConstants.chargeSolenoidChan);
   public final DoubleSolenoid loadActuatorSolenoid = new DoubleSolenoid(CannonConstants.pneumaticHubCANID,
       PneumaticsModuleType.REVPH, CannonConstants.loadActuatorSolenoidFwdChan,
       CannonConstants.loadActuatorSolenoidRevChan);
@@ -74,10 +73,12 @@ public class CannonSubsystem extends SubsystemBase {
 
   public double rotationAngleDegrees;
   // public double elevationAngleDegrees;
+  public short numberOfShotsRemaining = 8;
 
   public boolean isRotateMotorInitialized = false;
 
-  public CannonSubsystem() {
+  public CannonSubsystem(CommandXboxController controller) {
+    xBoxController = controller;
     configCannonSubsys();
 
   }
@@ -89,17 +90,17 @@ public class CannonSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Rotation Angle in Degrees", getRotateMotorEncoder());
     SmartDashboard.putBoolean("Is rotation initialized", isRotateMotorInitialized);
     SmartDashboard.putBoolean("Arm Retract Number", loadActuatorSwitch.get());
-    if (!isRotateMotorInitialized) initRotateMotor();
+    SmartDashboard.putNumber("Number of shots remaining", numberOfShotsRemaining);
+    if (!isRotateMotorInitialized)
+      initRotateMotor();
   }
 
   private void initRotateMotor() {
     loadActuatorSolenoid.set(Value.kReverse);
-    while (loadActuatorSwitch.get())
-      ;
+    while (!loadActuatorSwitch.get());
     loadActuatorSolenoid.set(Value.kOff);
     rotateMotor.set(0.1);
-    while (!rotatePresetLimit.isPressed())
-      ;
+    while (!rotatePresetLimit.isPressed());
     rotateMotor.set(0.0);
     Timer.delay(1.0);
     resetRotateMotorEncoder();
@@ -136,7 +137,7 @@ public class CannonSubsystem extends SubsystemBase {
    * }
    */
 
-  public Command holdAngles() {
+  public Command holdAngle() {
     return run(() -> {
       rotateMotorPIDController.setReference(rotationAngleDegrees, CANSparkMax.ControlType.kPosition);
       // elevateMotorPIDController.setReference(elevationAngleDegrees,
@@ -146,11 +147,28 @@ public class CannonSubsystem extends SubsystemBase {
 
   public Command fireCannon() {
     return runOnce(() -> {
-      firesSolenoid.set(Value.kForward);
-      Timer.delay(2.0);
-      firesSolenoid.set(Value.kReverse);
-      Timer.delay(2.0);
-      firesSolenoid.set(Value.kOff);
+      if (numberOfShotsRemaining > 0) {
+        firesSolenoid.set(Value.kForward);
+        Timer.delay(2.0);
+        firesSolenoid.set(Value.kReverse);
+        Timer.delay(2.0);
+        firesSolenoid.set(Value.kOff);
+        numberOfShotsRemaining--;
+        if (numberOfShotsRemaining == 0) {
+         xBoxController.getHID().setRumble(RumbleType.kBothRumble, 1.0);
+         Timer.delay(1.0);
+         xBoxController.getHID().setRumble(RumbleType.kBothRumble, 0.0);
+        } else {
+          loadActuatorSolenoid.set(Value.kReverse);
+          while (!loadActuatorSwitch.get());
+          loadActuatorSolenoid.set(Value.kOff);
+          setRotationAngle(rotationAngleDegrees + 45);
+        }
+      } else {
+        xBoxController.getHID().setRumble(RumbleType.kBothRumble, 1.0);
+        Timer.delay(1.0);
+        xBoxController.getHID().setRumble(RumbleType.kBothRumble, 0.0);
+      }
     });
   }
 
