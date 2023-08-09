@@ -19,22 +19,20 @@ public final class Constants {
 
   public static final class CannonConstants {
     // CAN Ids
-    public static final int rotateMotorCANID = 6; // Actually 5 lol
-    // public static final int elevateMotorCANID = 6;
+    public static final int rotateMotorCANID = 6;
+    // public static final int elevateMotorCANID = 5;
 
     // Gear ratios
-    public static final double rotateMotorGearRatio = 0.0;
+    public static final double rotateMotorGearRatio = 4.0 / 1.0;
     // public static final double elevateMotorGearRatio = 0.0;
 
     // Rotate PID gains
-    public static final double rotateKP = 0.0;
+    public static final double rotateKP = 0.01;
     public static final double rotateKI = 0.0;
     public static final double rotateKD = 0.0;
 
-    // Rotate feedforeward gains
-    public static final double rotateKS = 0.0;
-    public static final double rotateKV = 0.0;
-    public static final double rotateKA = 0.0;
+    // Rotate feedforward gains
+    public static final double rotateKF = 0.0;
 
     /*
      * // Elevate PID gains
