@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsytems.CannonSubsystem;
+import frc.robot.subsytems.ControllerSubsystem;
 import frc.robot.subsytems.DriveSubsystem;
 import static frc.robot.Constants.*;
 
@@ -21,6 +22,7 @@ public class RobotContainer {
   private final CommandXboxController xboxController = new CommandXboxController(DriveConstants.xboxControllerPort);
 
   public final CannonSubsystem cannonSubsys = new CannonSubsystem(xboxController);
+  public final ControllerSubsystem controllerSubsys = new ControllerSubsystem(cannonSubsys);
 
   public RobotContainer() {
     configBindings();
@@ -29,11 +31,11 @@ public class RobotContainer {
 
   private void configDefaultCommands() {
     driveSubsys.setDefaultCommand(driveSubsys.arcadeDrive(() -> xboxController.getLeftY(), () -> -xboxController.getRightX()));
-    cannonSubsys.setDefaultCommand(cannonSubsys.holdAngle());
+    cannonSubsys.setDefaultCommand(cannonSubsys.cannonCommands);
   }
 
   private void configBindings() {
-    xboxController.rightTrigger().onTrue(cannonSubsys.fireCannon());
+    xboxController.rightTrigger().onTrue(controllerSubsys.addFireCannon());
   }
 
   public Command getAutonomousCommand() {

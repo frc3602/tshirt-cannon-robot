@@ -31,10 +31,13 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class CannonSubsystem extends SubsystemBase {
+  public ParallelCommandGroup cannonCommands = new ParallelCommandGroup();
+ 
   private CommandXboxController xBoxController;
 
   // Motor controllers
