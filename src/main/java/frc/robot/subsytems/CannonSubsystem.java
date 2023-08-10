@@ -12,6 +12,7 @@ import com.revrobotics.ControlType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import static frc.robot.Constants.*;
 
@@ -59,14 +60,13 @@ public class CannonSubsystem extends SubsystemBase {
   private final DoubleSolenoid firesSolenoid = new DoubleSolenoid(CannonConstants.pneumaticHubCANID,
       PneumaticsModuleType.REVPH, CannonConstants.fillSolenoidChan, CannonConstants.firesSolenoidChan);
 
-  private final Solenoid chargeSolenoid = new Solenoid(PneumaticsModuleType.REVPH, CannonConstants.chargeSolenoidChan);
   public final DoubleSolenoid loadActuatorSolenoid = new DoubleSolenoid(CannonConstants.pneumaticHubCANID,
       PneumaticsModuleType.REVPH, CannonConstants.loadActuatorSolenoidFwdChan,
       CannonConstants.loadActuatorSolenoidRevChan);
 
   // DIO
   private final DigitalInput loadActuatorSwitch = new DigitalInput(CannonConstants.loadActuatorSwitchDIOChan);
-  private final SparkMaxLimitSwitch rotatePresetLimit = rotateMotor
+  public final SparkMaxLimitSwitch rotatePresetLimit = rotateMotor
       .getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
   // private final SparkMaxLimitSwitch elevatePresetLimit = elevateMotor
   // .getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
@@ -99,11 +99,12 @@ public class CannonSubsystem extends SubsystemBase {
     loadActuatorSolenoid.set(Value.kReverse);
     while (!loadActuatorSwitch.get());
     loadActuatorSolenoid.set(Value.kOff);
-    rotateMotor.set(0.1);
+    rotateMotor.set(0.08);
     while (!rotatePresetLimit.isPressed());
     rotateMotor.set(0.0);
     Timer.delay(1.0);
     resetRotateMotorEncoder();
+    rotatePresetLimit.enableLimitSwitch(false);
     isRotateMotorInitialized = true;
   }
 
@@ -148,6 +149,9 @@ public class CannonSubsystem extends SubsystemBase {
   public Command fireCannon() {
     return runOnce(() -> {
       if (numberOfShotsRemaining > 0) {
+        loadActuatorSolenoid.set(Value.kForward);
+        while(loadActuatorSwitch.get());
+        loadActuatorSolenoid.set(Value.kOff);
         firesSolenoid.set(Value.kForward);
         Timer.delay(2.0);
         firesSolenoid.set(Value.kReverse);
@@ -196,5 +200,7 @@ public class CannonSubsystem extends SubsystemBase {
     rotateMotorEncoder.setPositionConversionFactor(360 / CannonConstants.rotateMotorGearRatio);
     // elevateMotorEncoder.setPositionConversionFactor(360 /
     // CannonConstants.elevateMotorGearRatio);
+    
+    rotateMotor.setIdleMode(IdleMode.kBrake);
   }
 }

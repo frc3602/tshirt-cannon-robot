@@ -28,6 +28,8 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     m_robotContainer.cannonSubsys.isRotateMotorInitialized = false;
     m_robotContainer.cannonSubsys.numberOfShotsRemaining = 8;
+    m_robotContainer.cannonSubsys.rotatePresetLimit.enableLimitSwitch(true);
+    m_robotContainer.cannonSubsys.rotationAngleDegrees = 0;
   }
 
   @Override
