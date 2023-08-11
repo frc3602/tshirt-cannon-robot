@@ -79,11 +79,9 @@ public class CannonSubsystem extends SubsystemBase {
   private Command initRotate() {
     return run(() -> {
       loadActuatorSolenoid.set(Value.kReverse);
-    }).until(loadActuatorSwitch::get).andThen(() -> {
-      loadActuatorSolenoid.set(Value.kOff);
-    }).andThen(() -> {
+    }).until(() -> loadActuatorSwitch.get()).andThen(() -> {
       rotateMotor.set(0.08);
-    }).until(() -> !rotatePresetLimit.isPressed()).andThen(() -> {
+    }).until(() -> rotatePresetLimit.isPressed()).andThen(() -> {
       rotateMotor.stopMotor();
       Timer.delay(0.5);
       resetRotateMotorEncoder();
@@ -92,7 +90,7 @@ public class CannonSubsystem extends SubsystemBase {
     });
   }
 
-  public double getRotateMotorEncoder() {
+  public double getRotateMotorEncoder() { 
     return rotateMotorEncoder.getPosition();
   }
 
@@ -111,37 +109,35 @@ public class CannonSubsystem extends SubsystemBase {
   }
 
   public Command fireCannon() {
-    // if (numberOfShotsRemaining > 0) {
-    //   return runOnce(() -> {
-    //     loadActuatorSolenoid.set(Value.kForward);
-    //   }).until(loadActuatorSwitch::get).andThen(() -> {
-    //     loadActuatorSolenoid.set(Value.kOff);
-    //     firesSolenoid.set(Value.kForward);
-    //     Timer.delay(2.0);
-    //     firesSolenoid.set(Value.kReverse);
-    //     Timer.delay(2.0);
-    //     firesSolenoid.set(Value.kOff);
-    //     numberOfShotsRemaining--;
-    //     if (numberOfShotsRemaining == 0) {
-    //       xBoxController.getHID().setRumble(RumbleType.kBothRumble, 1.0);
-    //       Timer.delay(1.0);
-    //       xBoxController.getHID().setRumble(RumbleType.kBothRumble, 0.0);
-    //     } else {
-    //       loadActuatorSolenoid.set(Value.kReverse);
-    //       while (!loadActuatorSwitch.get())
-    //         ;
-    //       loadActuatorSolenoid.set(Value.kOff);
-    //       setRotationAngle(rotationAngleDegrees + 45);
-    //     }
-    //   });
-    // } else {
-    //   return runOnce(() -> {
-    //     xBoxController.getHID().setRumble(RumbleType.kBothRumble, 1.0);
-    //   }).withTimeout(1.0).andThen(() -> {
-    //     xBoxController.getHID().setRumble(RumbleType.kBothRumble, 0.0);
-    //   });
-    // }
-    return null;
+    if (numberOfShotsRemaining > 0) {
+      return runOnce(() -> {
+        loadActuatorSolenoid.set(Value.kForward);
+      }).until(loadActuatorSwitch::get).andThen(() -> {
+        loadActuatorSolenoid.set(Value.kOff);
+        firesSolenoid.set(Value.kForward);
+        Timer.delay(2.0);
+        firesSolenoid.set(Value.kReverse);
+        Timer.delay(2.0);
+        firesSolenoid.set(Value.kOff);
+        numberOfShotsRemaining--;
+        if (numberOfShotsRemaining == 0) {
+          xBoxController.getHID().setRumble(RumbleType.kBothRumble, 1.0);
+          Timer.delay(1.0);
+          xBoxController.getHID().setRumble(RumbleType.kBothRumble, 0.0);
+        } else {
+          loadActuatorSolenoid.set(Value.kReverse);
+          while (!loadActuatorSwitch.get());
+          loadActuatorSolenoid.set(Value.kOff);
+          setRotationAngle(rotationAngleDegrees + 45);
+        }
+      });
+    } else {
+      return runOnce(() -> {
+        xBoxController.getHID().setRumble(RumbleType.kBothRumble, 1.0);
+      }).withTimeout(1.0).andThen(() -> {
+        xBoxController.getHID().setRumble(RumbleType.kBothRumble, 0.0);
+      });
+    }
   }
 
   public Command retractLoadArm() {

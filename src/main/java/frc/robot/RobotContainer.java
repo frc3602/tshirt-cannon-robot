@@ -28,7 +28,8 @@ public class RobotContainer {
   }
 
   private void configDefaultCommands() {
-    driveSubsys.setDefaultCommand(driveSubsys.arcadeDrive(() -> xboxController.getLeftY(), () -> -xboxController.getRightX()));
+    driveSubsys
+        .setDefaultCommand(driveSubsys.arcadeDrive(() -> xboxController.getLeftY(), () -> -xboxController.getRightX()));
     cannonSubsys.setDefaultCommand(cannonSubsys.holdAngle());
   }
 
