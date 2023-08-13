@@ -143,7 +143,7 @@ public class CannonSubsystem extends SubsystemBase {
       rotateMotorPIDController.setReference(rotationAngleDegrees, CANSparkMax.ControlType.kPosition);
       // elevateMotorPIDController.setReference(elevationAngleDegrees,
       // CANSparkMax.ControlType.kPosition);
-    });
+    }).withName("Hold Angle Command");
   }
 
   public Command fireCannon() {
@@ -173,7 +173,7 @@ public class CannonSubsystem extends SubsystemBase {
         Timer.delay(1.0);
         xBoxController.getHID().setRumble(RumbleType.kBothRumble, 0.0);
       }
-    });
+    }).withName("Fire Cannon Command");
   }
 
   public Command retractLoadArm() {
@@ -202,5 +202,6 @@ public class CannonSubsystem extends SubsystemBase {
     // CannonConstants.elevateMotorGearRatio);
     
     rotateMotor.setIdleMode(IdleMode.kBrake);
+    rotateMotor.burnFlash();
   }
 }

@@ -40,7 +40,7 @@ public class DriveSubsystem extends SubsystemBase {
   public Command arcadeDrive(DoubleSupplier speed, DoubleSupplier rotation) {
     return run(() -> {
       diffDrive.arcadeDrive(speed.getAsDouble(), rotation.getAsDouble());
-    });
+    }).withName("Arcade Drive Command");
   }
 
   private void configDriveSubsys() {

@@ -16,9 +16,10 @@ import frc.robot.subsytems.DriveSubsystem;
 import static frc.robot.Constants.*;
 
 public class RobotContainer {
-  private final DriveSubsystem driveSubsys = new DriveSubsystem();
+  public final DriveSubsystem driveSubsys = new DriveSubsystem();
 
   private final CommandXboxController xboxController = new CommandXboxController(DriveConstants.xboxControllerPort);
+//  private final CommandXboxController xboxController2 = new CommandXboxController(1);
 
   public final CannonSubsystem cannonSubsys = new CannonSubsystem(xboxController);
 
