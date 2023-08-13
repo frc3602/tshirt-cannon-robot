@@ -99,7 +99,7 @@ public class CannonSubsystem extends SubsystemBase {
     loadActuatorSolenoid.set(Value.kReverse);
     while (!loadActuatorSwitch.get());
     loadActuatorSolenoid.set(Value.kOff);
-    rotateMotor.set(0.08);
+    rotateMotor.set(0.065);
     while (!rotatePresetLimit.isPressed());
     rotateMotor.set(0.0);
     Timer.delay(1.0);
@@ -153,7 +153,7 @@ public class CannonSubsystem extends SubsystemBase {
         while(loadActuatorSwitch.get());
         loadActuatorSolenoid.set(Value.kOff);
         firesSolenoid.set(Value.kForward);
-        Timer.delay(2.0);
+        Timer.delay(4.0);
         firesSolenoid.set(Value.kReverse);
         Timer.delay(2.0);
         firesSolenoid.set(Value.kOff);
