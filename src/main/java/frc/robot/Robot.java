@@ -6,6 +6,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -27,6 +28,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData(CommandScheduler.getInstance());
     SmartDashboard.putData(m_robotContainer.cannonSubsys);
     SmartDashboard.putData(m_robotContainer.driveSubsys);
+    SmartDashboard.putNumber("Time (s.)", RobotController.getFPGATime());
   }
 
   @Override
@@ -35,6 +37,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.cannonSubsys.numberOfShotsRemaining = 8;
     m_robotContainer.cannonSubsys.rotatePresetLimit.enableLimitSwitch(true);
     m_robotContainer.cannonSubsys.rotationAngleDegrees = 0;
+    
   }
 
   @Override
