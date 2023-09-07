@@ -7,6 +7,7 @@
 package frc.robot.subsytems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import static frc.robot.Constants.*;
 
@@ -45,5 +46,10 @@ public class DriveSubsystem extends SubsystemBase {
 
   private void configDriveSubsys() {
     rightControllerGroup.setInverted(true);
+
+    frontLeftMotor.setIdleMode(IdleMode.kBrake);
+    backLeftMotor.setIdleMode(IdleMode.kBrake);
+    frontRightMotor.setIdleMode(IdleMode.kBrake);
+    backRightMotor.setIdleMode(IdleMode.kBrake);
   }
 }

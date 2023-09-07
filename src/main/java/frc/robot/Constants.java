@@ -27,7 +27,7 @@ public final class Constants {
     // public static final double elevateMotorGearRatio = 0.0;
 
     // Rotate PID gains
-    public static final double rotateKP = 0.01;
+    public static final double rotateKP = 0.00975;
     public static final double rotateKI = 0.0;
     public static final double rotateKD = 0.0;
 
